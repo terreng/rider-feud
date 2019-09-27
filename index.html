@@ -5,6 +5,25 @@
 body {
     margin: 0;
     background: linear-gradient(0deg, #1e7aef, #7bcbff);
+        overflow: hidden;
+}
+
+.strikeIn {
+    animation: 0.5s strikeIn forwards;
+}
+
+@keyframes strikeIn {
+0% {
+transform: translate(-50%,-50%) scale(0);
+opacity: 0;
+}
+50% {
+transform: translate(-50%,-50%) scale(1.1);
+opacity: 1;
+}
+100% {
+transform: translate(-50%,-50%) scale(1);
+}
 }
 </style>
 </head>
@@ -27,26 +46,66 @@ body {
     top: 450px;
     border-radius: 10px;
     border: 8px solid #585858;
-    height: 122px;">
-How much does the average high school student spend on lunch per week?
+    height: 122px;
+    /* transform: rotateX(180.1deg) translateX(-50%); */
+    transition: 0.5s transform;
+    transform-style: preserve-3d;">
+<div style="
+    backface-visibility: hidden;
+">How much does the average high school student spend on lunch per week?</div>
+<div style="
+    position: absolute;
+    top: 20px;
+    text-align: center;
+    left: 0;
+    right: 0;
+    font-size: 105px;
+    transform: rotateY(180deg) rotate(180deg);
+    backface-visibility: hidden;
+">3 hours</div>
 </div>
 
-<div>
+<img src="strike.png" class="strikeIn" style="
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    height: 600px;
+">
+
+<div id="team_numbers">
+<img src="0.png" style="
+    position: absolute;
+    left: 0;
+    bottom: 160px;
+    height: 200px;
+    padding: 20px;
+">
+<img src="1.png" style="
+    position: absolute;
+    right: 0;
+    bottom: 160px;
+    height: 200px;
+    padding: 20px;
+">
+</div>
+
+<div id="team_names">
 <img src="freshmen.png" style="
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     padding: 30px;
     display: none;
 ">
 <img src="juniors.png" style="
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     padding: 30px;
     margin-bottom: -20px;
 ">
 <img src="sophomores.png" style="
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     padding: 30px;
     right: 0;
     margin-bottom: -21px;
@@ -54,7 +113,7 @@ How much does the average high school student spend on lunch per week?
 ">
 <img src="seniors.png" style="
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     padding: 30px;
     right: 0;
 ">
