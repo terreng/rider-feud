@@ -133,7 +133,20 @@ function message_receive(ev)
     }
     }
     document.querySelector("#team_names").innerHTML = pendhtml;
+        document.querySelector("#team_numbers").style.display = "none";
+        document.querySelector("#team_names").style.display = "none";
+        document.querySelector("#question").style.display = "none";
 
+    }
+    if (message.data == "in_round") {
+        document.querySelector("#team_numbers").style.display = "block";
+        document.querySelector("#team_names").style.display = "block";
+        document.querySelector("#question").style.display = "block";
+    }
+    if (message.data == "winner") {
+        document.querySelector("#team_numbers").style.display = "none";
+        document.querySelector("#team_names").style.display = "none";
+        document.querySelector("#question").style.display = "none";
     }
     }
     if (message.command == 'wrong') {

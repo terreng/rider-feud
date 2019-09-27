@@ -54,9 +54,11 @@ if (status == "winner") {
 }
 if (status == "in_round") {
     status = "winner"
+    message_broadcast({'command':'update_status',"data":"winner","team":0});
 }
 if (status == "before_round") {
     status = "in_round"
+    message_broadcast({'command':'update_status',"data":"in_round"});
 }
 if (status == "before_start") {
     score[0] = 0;
