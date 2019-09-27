@@ -28,7 +28,7 @@ body {
 </style>
 </head>
 <body>
-<div class="text" id="status_text">Current status: Before start</div>
+<div class="text" id="status_text">Current status: before_start</div>
 <div class="button" onclick="continueRound()">Continue Round</div>
 <div class="text" id="question_text">Current question index: 0</div>
 <div class="button" onclick="nextQuestion()">Next question</div>
@@ -49,12 +49,22 @@ var score = [];
 var question_index = 0;
 
 function continueRound() {
+if (status == "winner") {
+    status = "before_round"
+}
+if (status == "in_round") {
+    status = "winner"
+}
+if (status == "before_round") {
+    status = "in_round"
+}
 if (status == "before_start") {
     score[0] = 0;
     score[1] = 0;
     message_broadcast({'command':'update_status',"data":"before_round","teams":["freshmen","sophomores"]});
     status = "before_round";
 }
+document.querySelector("#status_text").innerHTML = "Current status: "+status;
 }
 
 function incorrect() {

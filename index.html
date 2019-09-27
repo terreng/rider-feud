@@ -52,6 +52,10 @@ transform: translate(-50%,-50%) scale(1);
     transform-style: preserve-3d;">
 <div id="question_1" style="
     backface-visibility: hidden;
+    text-align: center;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 ">Name a round fruit</div>
 <div id="question_2" style="
     position: absolute;
@@ -92,38 +96,12 @@ transform: translate(-50%,-50%) scale(1);
 </div>
 
 <div id="team_names">
-<img src="freshmen.png" style="
-    position: absolute;
-    bottom: 10px;
-    padding: 30px;
-    display: none;
-">
-<img src="juniors.png" style="
-    position: absolute;
-    bottom: 10px;
-    padding: 30px;
-    margin-bottom: -20px;
-">
-<img src="sophomores.png" style="
-    position: absolute;
-    bottom: 10px;
-    padding: 30px;
-    right: 0;
-    margin-bottom: -21px;
-    display: none;
-">
-<img src="seniors.png" style="
-    position: absolute;
-    bottom: 10px;
-    padding: 30px;
-    right: 0;
-">
 </div>
 
 <script>
 var score = [];
 var question_index = 0;
-var questions = [["Name a round fruit","Orange"],["Name a country that starts with the letter “I”","India"],["How many hours does the average teen spend on their phone in a single day?","5 hours"],["Name something you’d hear on a construction site","Ouch/Stop!/Curse"],["Name something you might find in a kindergarten classroom","Crayons/Markers/Colors"],["Name a musician whose stage name starts with the letter “D”","Drake"],["Name a sport where you have to throw a ball","Baseball/Softball"],["Name a dairy product","Milk"],["Name an ingredient found on a subway sandwich","Lettuce"],["How much does the average high school student spend on lunch per week?","$20"],["Name a famous cartoon dog","Clifford the Big Red Dog"],["Name a snack people sneak into a movie theater","Candy"],["Name something people do when trying to get out of a speeding ticket","Flirt w/ Officer"]]
+var questions = [["Name a round fruit","Orange"],['Name a country that starts with the letter "I"',"India"],["How many hours does the average teen spend on their phone in a single day?","5 hours"],["Name something you'd hear on a construction site","Ouch/Stop!/Curse"],["Name something you might find in a kindergarten classroom","Crayons/Markers/Colors"],['Name a musician whose stage name starts with the letter "D"',"Drake"],["Name a sport where you have to throw a ball","Baseball/Softball"],["Name a dairy product","Milk"],["Name an ingredient found on a subway sandwich","Lettuce"],["How much does the average high school student spend on lunch per week?","$20"],["Name a famous cartoon dog","Clifford the Big Red Dog"],["Name a snack people sneak into a movie theater","Candy"],["Name something people do when trying to get out of a speeding ticket","Flirt w/ Officer"]]
 
 window.addEventListener("storage", message_receive);
 
