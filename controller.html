@@ -1,0 +1,84 @@
+<html>
+<head>
+<title>Rider Feud</title>
+<style>
+body {
+    font-family: Arial;
+}
+
+.text {
+    padding: 10px 0px;
+}
+
+.button {
+    padding: 10px;
+    background: #00ace4;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 150px;
+    margin: 10px 0px;
+}
+.button:hover {
+    opacity: 0.8;
+}
+.button:active {
+    opacity: 0.6;
+}
+</style>
+</head>
+<body>
+<div class="text" id="status_text">Current status: Before start</div>
+<div class="button" onclick="continueRound()">Continue Round</div>
+<div class="text" id="question_text">Current question index: 0</div>
+<div class="button" onclick="nextQuestion()">Next question</div>
+<div class="button" onclick="correct(0)">LEFT team correct</div>
+<div class="button" onclick="correct(1)">RIGHT team correct</div>
+<div class="button" onclick="incorrect()">Incorrect</div>
+
+<audio id="wrong">
+  <source src="wrong.mp3" type="audio/mp3">
+</audio>
+<audio id="right">
+  <source src="right.mp3" type="audio/mp3">
+</audio>
+<script>
+var status = "before_start";
+var round_index = 0;
+var score = [];
+var question_index = 0;
+
+function continueRound() {
+if (status == "before_start") {
+    score[0] = 0;
+    score[1] = 0;
+    message_broadcast({'command':'update_status',"data":"before_round","teams":["freshmen","sophomores"]});
+    status = "before_round";
+}
+}
+
+function incorrect() {
+    message_broadcast({'command':'wrong'});
+    document.querySelector("#wrong").currentTime = 1.2;
+    document.querySelector("#wrong").play();
+}
+
+function correct(id) {
+    message_broadcast({'command':'right','data':id});
+    document.querySelector("#right").play();
+}
+
+function nextQuestion() {
+    question_index++;
+    document.querySelector("#question_text").innerHTML = "Current question index: "+question_index;
+    message_broadcast({'command':'next_question',"data":question_index});
+}
+
+function message_broadcast(message)
+{
+    localStorage.setItem('message',JSON.stringify(message));
+    localStorage.removeItem('message');
+}
+</script>
+</body>
+</html>

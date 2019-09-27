@@ -34,7 +34,7 @@ transform: translate(-50%,-50%) scale(1);
     left: 50%;
     transform: translateX(-50%);
     margin-top: -60px;"></img>
-<div style="    color: white;
+<div id="question" style="    color: white;
     font-size: 53px;
     width: 50%;
     left: 50%;
@@ -50,10 +50,10 @@ transform: translate(-50%,-50%) scale(1);
     /* transform: rotateX(180.1deg) translateX(-50%); */
     transition: 0.5s transform;
     transform-style: preserve-3d;">
-<div style="
+<div id="question_1" style="
     backface-visibility: hidden;
-">How much does the average high school student spend on lunch per week?</div>
-<div style="
+">Name a round fruit</div>
+<div id="question_2" style="
     position: absolute;
     top: 20px;
     text-align: center;
@@ -62,26 +62,27 @@ transform: translate(-50%,-50%) scale(1);
     font-size: 105px;
     transform: rotateY(180deg) rotate(180deg);
     backface-visibility: hidden;
-">3 hours</div>
+">Orange</div>
 </div>
 
-<img src="strike.png" class="strikeIn" style="
+<img src="strike.png" class="strikeIn" id="strike" style="
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
     height: 600px;
+    display: none;
 ">
 
 <div id="team_numbers">
-<img src="0.png" style="
+<img src="0.png" id="score_0" style="
     position: absolute;
     left: 0;
     bottom: 160px;
     height: 200px;
     padding: 20px;
 ">
-<img src="1.png" style="
+<img src="0.png" id="score_1" style="
     position: absolute;
     right: 0;
     bottom: 160px;
@@ -119,6 +120,64 @@ transform: translate(-50%,-50%) scale(1);
 ">
 </div>
 
+<script>
+var score = [];
+var question_index = 0;
+var questions = [["Name a round fruit","Orange"],["Name a country that starts with the letter “I”","India"],["How many hours does the average teen spend on their phone in a single day?","5 hours"],["Name something you’d hear on a construction site","Ouch/Stop!/Curse"],["Name something you might find in a kindergarten classroom","Crayons/Markers/Colors"],["Name a musician whose stage name starts with the letter “D”","Drake"],["Name a sport where you have to throw a ball","Baseball/Softball"],["Name a dairy product","Milk"],["Name an ingredient found on a subway sandwich","Lettuce"],["How much does the average high school student spend on lunch per week?","$20"],["Name a famous cartoon dog","Clifford the Big Red Dog"],["Name a snack people sneak into a movie theater","Candy"],["Name something people do when trying to get out of a speeding ticket","Flirt w/ Officer"]]
 
+window.addEventListener("storage", message_receive);
+
+function message_receive(ev)
+{
+    console.log(ev);
+    if (ev.key!='message') return; // ignore other keys
+    var message=JSON.parse(ev.newValue);
+    if (!message) return; // ignore empty msg or msg reset
+
+    if (message.command == 'update_status') {
+    if (message.data == "before_round") {
+        score[0] = 0;
+        score[1] = 0;
+        document.querySelector("#team_names").innerHTML = "";
+        var pendhtml = "";
+    for (var i = 0; i < message.teams.length; i++) {
+    if (message.teams[i] == "freshmen") {
+        pendhtml += '<img src="freshmen.png" style="position: absolute;bottom: 10px;padding: 30px;'+(i == 1 ? 'right: 0;' : '')+'">';
+    }
+    if (message.teams[i] == "juniors") {
+        pendhtml += '<img src="juniors.png" style="margin-bottom: -20px;position: absolute;bottom: 10px;padding: 30px;'+(i == 1 ? 'right: 0;' : '')+'">';
+    }
+    if (message.teams[i] == "sophomores") {
+        pendhtml += '<img src="sophomores.png" style="margin-bottom: -21px;position: absolute;bottom: 10px;padding: 30px;'+(i == 1 ? 'right: 0;' : '')+'">';
+    }
+    if (message.teams[i] == "seniors") {
+        pendhtml += '<img src="seniors.png" style="position: absolute;bottom: 10px;padding: 30px;'+(i == 1 ? 'right: 0;' : '')+'">';
+    }
+    }
+    document.querySelector("#team_names").innerHTML = pendhtml;
+
+    }
+    }
+    if (message.command == 'wrong') {
+        document.querySelector("#strike").style.display = "block";
+        setTimeout(function() {
+            document.querySelector("#strike").style.display = "none";
+        },1000)
+    }
+    if (message.command == 'right') {
+        score[message.data]++;
+        document.querySelector("#score_"+message.data).src = score[message.data]+".png";
+        document.querySelector("#question").style.transform = "rotateX(180.1deg) translateX(-50%)";
+    }
+    if (message.command == 'next_question') {
+        question_index = message.data;
+        document.querySelector("#question").style.transform = "translateX(-50%)";
+        document.querySelector("#question_1").innerHTML = questions[question_index][0];
+        setTimeout(function() {
+            document.querySelector("#question_2").innerHTML = questions[question_index][1];
+        },800)
+    }
+}
+</script>
 </body>
 </html>
