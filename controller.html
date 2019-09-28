@@ -44,7 +44,7 @@ body {
   <source src="right.mp3" type="audio/mp3">
 </audio>
 
-<video id="music">
+<video id="music" style="visibility: hidden;">
     <source src="music.mp4" type="video/mp4">
 </video>
 <script>
@@ -100,6 +100,11 @@ function correct(id) {
 function nextQuestion() {
     question_index++;
     document.querySelector("#question_text").innerHTML = "Current question index: "+question_index;
+    if (question_index > 8) {
+        document.querySelector("#question_text").style.color = "red";
+    } else {
+        document.querySelector("#question_text").style.color = "green";
+    }
     message_broadcast({'command':'next_question',"data":question_index});
 }
 
