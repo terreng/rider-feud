@@ -30,6 +30,7 @@ body {
 <body>
 <div class="text" id="status_text">Current status: before_start</div>
 <div class="button" onclick="continueRound()">Continue Round</div>
+<div class="text" id="round_text">Current round index: 0</div>
 <div class="text" id="question_text">Current question index: 0</div>
 <div class="button" onclick="nextQuestion()">Next question</div>
 <div class="button" onclick="correct(0)">LEFT team correct</div>
@@ -42,19 +43,34 @@ body {
 <audio id="right">
   <source src="right.mp3" type="audio/mp3">
 </audio>
+
+<video id="music">
+    <source src="music.mp4" type="video/mp4">
+</video>
 <script>
 var status = "before_start";
 var round_index = 0;
 var score = [];
 var question_index = 0;
+var round_teams = [["freshmen","sophomores"],["juniors","seniors"],[]];
 
 function continueRound() {
 if (status == "winner") {
+    score[0] = 0;
+    score[1] = 0;
     status = "before_round"
+    round_index++;
+    message_broadcast({'command':'update_status',"data":"before_round","teams":round_teams[round_index]});
+    document.querySelector("#round_text").innerHTML = "Current round index: "+round_index;
+    nextQuestion();
+    return document.querySelector("#status_text").innerHTML = "Current status: "+status;
 }
 if (status == "in_round") {
     status = "winner"
-    message_broadcast({'command':'update_status',"data":"winner","team":0});
+    message_broadcast({'command':'update_status',"data":"winner","team":round_teams[round_index][(score[0] > score[1] ? 0 : 1)]});
+    round_teams[2][round_index] = round_teams[round_index][(score[0] > score[1] ? 0 : 1)];
+    document.querySelector("#music").currentTime = 126;
+    document.querySelector("#music").play();
 }
 if (status == "before_round") {
     status = "in_round"
@@ -78,6 +94,7 @@ function incorrect() {
 function correct(id) {
     message_broadcast({'command':'right','data':id});
     document.querySelector("#right").play();
+    score[id]++;
 }
 
 function nextQuestion() {
