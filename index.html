@@ -4,8 +4,8 @@
 <style>
 body {
     margin: 0;
-    background: linear-gradient(0deg, #1e7aef, #7bcbff);
-        overflow: hidden;
+    background: linear-gradient(0deg, #424242, #000000);
+    overflow: hidden;
 }
 
 .strikeIn {
@@ -25,17 +25,44 @@ opacity: 1;
 transform: translate(-50%,-50%) scale(1);
 }
 }
+
+.option {
+    color: white;
+    font-size: 45px;
+    width: 23%;
+    left: 36.5%;
+    transform: translateX(-50%);
+    position: absolute;
+    font-family: Arial;
+    padding: 20px;
+    background: linear-gradient(0deg, #0059ff, #062882);
+    top: 335px;
+    border-radius: 10px;
+    border: 8px solid #585858;
+    height: 70px;
+    /* transform: rotateX(180.1deg) translateX(-50%); */
+    transition: 0.5s transform;
+    transform-style: preserve-3d;
+    border-radius: 100px;
+    text-align: center;
+    line-height: 70px;
+}
+.selected {
+    background: linear-gradient(0deg, #ff8400, #ffac00);
+}
+.correct {
+    background: linear-gradient(0deg, #00bf06, #2bf500);
+}
+.incorrect {
+    background: linear-gradient(0deg, #bf0000, #ff2a2a);
+}
 </style>
 </head>
 <body>
 <div style="width:1920px;height:1080px;position: relative;">
 <div>
-<img src="logo.png" style="width: 640px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: -60px;"></img>
-<div id="question" style="    color: white;
+<div id="question" style="
+    color: white;
     font-size: 53px;
     width: 50%;
     left: 50%;
@@ -43,31 +70,35 @@ transform: translate(-50%,-50%) scale(1);
     position: absolute;
     font-family: Arial;
     padding: 20px;
-    background: linear-gradient(0deg, #9bbeff, #4176ff);
-    top: 462px;
+    background: linear-gradient(0deg, #0059ff, #062882);
+    top: 140px;
     border-radius: 10px;
     border: 8px solid #585858;
     height: 122px;
     /* transform: rotateX(180.1deg) translateX(-50%); */
     transition: 0.5s transform;
-    transform-style: preserve-3d;">
+    transform-style: preserve-3d;
+    border-radius: 100px;
+    ">
 <div id="question_1" style="
     backface-visibility: hidden;
     text-align: center;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-">Name a round fruit</div>
-<div id="question_2" style="
-    position: absolute;
-    top: 25px;
-    text-align: center;
-    left: 0;
-    right: 0;
-    font-size: 92px;
-    transform: rotateY(180deg) rotate(180deg);
-    backface-visibility: hidden;
-">Orange</div>
+">What is your body's largest organ?</div>
+</div>
+<div id="option1" class="option">
+Edward Jones
+</div>
+<div id="option2" class="option" style="left: 63.5%;">
+Another choice
+</div>
+<div id="option3" class="option" style="top: 482px;">
+Third choice
+</div>
+<div id="option4" class="option" style="left: 63.5%;top: 482px;">
+Fourth choice
 </div>
 
 <img src="strike.png" class="strikeIn" id="strike" style="
@@ -97,24 +128,11 @@ transform: translate(-50%,-50%) scale(1);
 </div>
 
 <div id="team_names">
+    <img src="students.png" style="position: absolute;bottom: 10px;padding: 30px;height: 140px;padding-bottom: 20px;">
+    <img src="staff.png" style="position: absolute;bottom: 10px;padding: 30px;right:0;height: 140px;padding-bottom: 20px;">
 </div>
 
-<div id="vs">
-<img src="freshmen.png" id="vs_1" style="    position: absolute;
-    left: 50%;
-    transform: translateX(-50%) scale(1.5);
-    top: 479px;">
-<img src="vs.png" style="    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 657px;">
-<img src="sophomores.png" id="vs_2" style="    position: absolute;
-    left: 50%;
-    transform: translateX(-50%) scale(1.5);
-    top: 830px;">
-</div>
-
-<div id="winner">
+<div id="winner" style="display:none">
 <img src="winner.png" style="
     position: absolute;
     left: 50%;
@@ -131,6 +149,7 @@ transform: translate(-50%,-50%) scale(1);
 
 <div id="black">
 <div style="
+display:none;
     position: fixed;
     left: 0;
     top: 0;
@@ -138,18 +157,11 @@ transform: translate(-50%,-50%) scale(1);
     bottom: 0;
     background: black;
 "></div>
-<img src="freshmen.png">
-<img src="sophomores.png">
-<img src="juniors.png">
-<img src="seniors.png">
-<img src="vs.png">
 <img src="winner.png">
 <img src="0.png">
 <img src="1.png">
 <img src="2.png">
 <img src="3.png">
-<img src="strike.png">
-<img src="logo.png">
 </div>
 
 </div>
