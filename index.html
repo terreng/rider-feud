@@ -52,7 +52,7 @@ transform: translate(-50%,-50%) scale(1);
     background: linear-gradient(0deg, #ff8400, #ffac00);
 }
 .correct {
-    background: linear-gradient(0deg, #00bf06, #2bf500);
+    background: linear-gradient(0deg, #00a205, #28e200);
 }
 .incorrect {
     background: linear-gradient(0deg, #bf0000, #ff2a2a);
@@ -148,9 +148,8 @@ Fourth choice
     ">
 </div>
 
-<div id="black">
+<div id="black" style="display:none;">
 <div style="
-display:none;
     position: fixed;
     left: 0;
     top: 0;
@@ -184,75 +183,9 @@ function message_receive(ev)
 
     if (message.command == 'update_status') {
     if (message.data == "before_round") {
-        score[0] = 0;
-        score[1] = 0;
-        document.querySelector("#score_0").src = "0.png";
-        document.querySelector("#score_1").src = "0.png";
-        document.querySelector("#team_names").innerHTML = "";
-        document.querySelector("#black").style.display = "none";
-        var pendhtml = "";
-    for (var i = 0; i < message.teams.length; i++) {
-    if (message.teams[i] == "freshmen") {
-        pendhtml += '<img src="freshmen.png" style="position: absolute;bottom: 10px;padding: 30px;'+(i == 1 ? 'right: 0;' : '')+'">';
-    }
-    if (message.teams[i] == "juniors") {
-        pendhtml += '<img src="juniors.png" style="margin-bottom: -20px;position: absolute;bottom: 10px;padding: 30px;'+(i == 1 ? 'right: 0;' : '')+'">';
-    }
-    if (message.teams[i] == "sophomores") {
-        pendhtml += '<img src="sophomores.png" style="margin-bottom: -21px;position: absolute;bottom: 10px;padding: 30px;'+(i == 1 ? 'right: 0;' : '')+'">';
-    }
-    if (message.teams[i] == "seniors") {
-        pendhtml += '<img src="seniors.png" style="position: absolute;bottom: 10px;padding: 30px;'+(i == 1 ? 'right: 0;' : '')+'">';
-    }
-    if (i == 0) {
-        document.querySelector("#vs_1").src = message.teams[i]+".png";
-    }
-    if (i == 1) {
-        document.querySelector("#vs_2").src = message.teams[i]+".png";
-    }
-    }
-    document.querySelector("#team_names").innerHTML = pendhtml;
-        document.querySelector("#team_numbers").style.display = "none";
-        document.querySelector("#team_names").style.display = "none";
-        document.querySelector("#question").style.display = "none";
-        document.querySelector("#vs").style.display = "block";
-        document.querySelector("#winner").style.display = "none";
+
 
     }
-    if (message.data == "in_round") {
-        document.querySelector("#team_numbers").style.display = "block";
-        document.querySelector("#team_names").style.display = "block";
-        document.querySelector("#question").style.display = "block";
-        document.querySelector("#vs").style.display = "none";
-        document.querySelector("#winner").style.display = "none";
-    }
-    if (message.data == "winner") {
-        document.querySelector("#team_numbers").style.display = "none";
-        document.querySelector("#team_names").style.display = "none";
-        document.querySelector("#question").style.display = "none";
-        document.querySelector("#vs").style.display = "none";
-        document.querySelector("#winner").style.display = "block";
-        document.querySelector("#winner_team").src = message.team+".png";
-    }
-    }
-    if (message.command == 'wrong') {
-        document.querySelector("#strike").style.display = "block";
-        setTimeout(function() {
-            document.querySelector("#strike").style.display = "none";
-        },1000)
-    }
-    if (message.command == 'right') {
-        score[message.data]++;
-        document.querySelector("#score_"+message.data).src = score[message.data]+".png";
-        document.querySelector("#question").style.transform = "rotateX(180.1deg) translateX(-50%)";
-    }
-    if (message.command == 'next_question') {
-        question_index = message.data;
-        document.querySelector("#question").style.transform = "translateX(-50%)";
-        document.querySelector("#question_1").innerHTML = questions[question_index][0];
-        setTimeout(function() {
-            document.querySelector("#question_2").innerHTML = questions[question_index][1];
-        },800)
     }
 }
 </script>
