@@ -27,6 +27,10 @@ transform: translate(-50%,-50%) scale(1);
 }
 }
 
+#question {
+    animation: 1s fadeIn forwards;
+}
+
 .option {
     color: white;
     font-size: 45px;
@@ -47,6 +51,15 @@ transform: translate(-50%,-50%) scale(1);
     border-radius: 100px;
     text-align: center;
     line-height: 70px;
+    animation: 1s fadeIn forwards;
+}
+@keyframes fadeIn {
+0% {
+    opacity: 0;
+}
+100% {
+    opacity: 1;
+}
 }
 .selected {
     background: linear-gradient(0deg, #ff8400, #ffac00);
@@ -148,14 +161,14 @@ Fourth choice
     ">
 </div>
 
-<div id="black" style="display:none;">
+<div id="black" style="display:block;">
 <div style="
     position: fixed;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    background: black;
+    background-image: url('are you smarter than sid logo.png');
 "></div>
 <img src="winner.png">
 <img src="0.png">
@@ -167,10 +180,18 @@ Fourth choice
 </div>
 
 <script>
-var score = [];
+var score = [0,0];
 var question_index = 0;
-var questions = [["Name a round fruit","Orange"],['Name a country that starts with the letter "I"',"India"],["How many hours does the average teen spend on their phone in a single day?","5 hours"],["Name something you'd hear on a construction site","Ouch/Stop!/Curse"],["Name something you might find in a kindergarten classroom","Crayons/Markers/Colors"],['Name a musician whose stage name starts with the letter "D"',"Drake"],["Name a sport where you have to throw a ball","Baseball/Softball"],["Name a dairy product","Milk"],["Name an ingredient found on a subway sandwich","Lettuce"],["How much does the average high school student spend on lunch per week?","$20"],["Name a famous cartoon dog","Clifford the Big Red Dog"],["Name a snack people sneak into a movie theater","Candy"],["Name something people do when trying to get out of a speeding ticket","Flirt w/ Officer"]]
-var current_teams = [];
+var selected_answer = 0;
+var faded_answer = 0;
+var questions = {
+    0: ["What was the name of the snowman in Frozen?","Sven","Marshmallow","Olaf","Oaken",3],
+    1: ["Who sang the song \"Toxic\"?","Lady Gaga","Britney Spears","Christina Aguilera","Taylor Swift",2],
+    2: ["What was the name of the baby woolly mammoth in Ice Age?","Manfred","Peaches","Sid","Ellie"]
+}
+var onteam = 0;//0 = students, 1 = staff
+
+var gid = function(id) {return document.getElementById(id)};
 
 window.addEventListener("storage", message_receive);
 
@@ -182,8 +203,66 @@ function message_receive(ev)
     if (!message) return; // ignore empty msg or msg reset
 
     if (message.command == 'update_status') {
-    if (message.data == "before_round") {
+    if (message.data == "game_start") {
+        gid("option1").style.display = "none";
+        gid("option2").style.display = "none";
+        gid("option3").style.display = "none";
+        gid("option4").style.display = "none";
+        gid("question").style.display = "none";
+        gid("black").style.display = "none";
+    }
+    if (message.data == "update_round") {
 
+        question_index = message.round;
+        onteam = message.round % 2;
+        gid("question_1").innerHTML = questions[question_index][0];
+        gid("question").style.display = "block";
+        gid("option1").innerHTML = questions[question_index][1];
+        gid("option2").innerHTML = questions[question_index][2];
+        gid("option3").innerHTML = questions[question_index][3];
+        gid("option4").innerHTML = questions[question_index][4];
+        gid("option1").style.display = "none";
+        gid("option2").style.display = "none";
+        gid("option3").style.display = "none";
+        gid("option4").style.display = "none";
+        faded_answer = 0;
+        gid("option1").classList.remove("selected");
+        gid("option2").classList.remove("selected");
+        gid("option3").classList.remove("selected");
+        gid("option4").classList.remove("selected");
+        gid("option1").classList.remove("correct");
+        gid("option2").classList.remove("correct");
+        gid("option3").classList.remove("correct");
+        gid("option4").classList.remove("correct");
+        gid("option1").classList.remove("incorrect");
+        gid("option2").classList.remove("incorrect");
+        gid("option3").classList.remove("incorrect");
+        gid("option4").classList.remove("incorrect");
+
+    }
+    if (message.data == "next_answer") {
+        faded_answer += 1;
+        gid("option"+faded_answer).style.display = "block";
+    }
+    if (message.data == "select_answer") {
+
+        console.log(message)
+        selected_answer = message.answer;
+        gid("option"+String(selected_answer+1)).classList.add("selected");
+
+    }
+    if (message.data == "correct_answer") {
+
+        score[onteam]++;
+        gid("score_"+onteam).src = score[onteam]+".png";
+        gid("option"+String(selected_answer+1)).classList.remove("selected");
+        gid("option"+String(selected_answer+1)).classList.add("correct");
+
+    }
+    if (message.data == "incorrect_answer") {
+
+        gid("option"+String(selected_answer+1)).classList.remove("selected");
+        gid("option"+String(selected_answer+1)).classList.add("incorrect");
 
     }
     }

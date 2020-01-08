@@ -29,13 +29,14 @@ body {
 </head>
 <body>
 <div class="text" id="status_text">Current status: before_start</div>
-<div class="button" onclick="continueRound()">Continue Round</div>
-<div class="text" id="round_text">Current round index: 0</div>
+<div class="button" onclick="continueRound()">Continue</div>
 <div class="text" id="question_text">Current question index: 0</div>
-<div class="button" onclick="nextQuestion()">Next question</div>
-<div class="button" onclick="correct(0)">LEFT team correct</div>
-<div class="button" onclick="correct(1)">RIGHT team correct</div>
-<div class="button" onclick="incorrect()">Incorrect</div>
+<div class="button" onclick="correct()">Correct</div>
+<div class="button" onclick="wrong()">Wrong</div>
+<div class="button" onclick="answer(0)">A</div>
+<div class="button" onclick="answer(1)">B</div>
+<div class="button" onclick="answer(2)">C</div>
+<div class="button" onclick="answer(3)">D</div>
 
 <audio id="wrong">
   <source src="wrong.mp3" type="audio/mp3">
@@ -43,69 +44,60 @@ body {
 <audio id="right">
   <source src="right.mp3" type="audio/mp3">
 </audio>
+<audio id="lockedin">
+    <source src="lockedin.mp3" type="audio/mp3">
+  </audio>
 
 <video id="music" style="visibility: hidden;">
     <source src="music.mp4" type="video/mp4">
 </video>
 <script>
 var status = "before_start";
-var round_index = 0;
-var score = [];
+var round_index = -1;
 var question_index = 0;
-var round_teams = [["freshmen","sophomores"],["juniors","seniors"],[]];
+var faded_answers = 0;
+
+var gid = function(id) {return document.getElementById(id)};
 
 function continueRound() {
-if (status == "winner") {
-    score[0] = 0;
-    score[1] = 0;
-    status = "before_round"
+if (status == "update_questions") {
+    message_broadcast({'command':'update_status',"data":"next_answer"});
+    faded_answers++;
+}
+if (status == "update_round") {
     round_index++;
-    message_broadcast({'command':'update_status',"data":"before_round","teams":round_teams[round_index]});
-    document.querySelector("#round_text").innerHTML = "Current round index: "+round_index;
-    nextQuestion();
-    return document.querySelector("#status_text").innerHTML = "Current status: "+status;
-}
-if (status == "in_round") {
-    status = "winner"
-    message_broadcast({'command':'update_status',"data":"winner","team":round_teams[round_index][(score[0] > score[1] ? 0 : 1)]});
-    round_teams[2][round_index] = round_teams[round_index][(score[0] > score[1] ? 0 : 1)];
-    document.querySelector("#music").currentTime = 126;
-    document.querySelector("#music").play();
-}
-if (status == "before_round") {
-    status = "in_round"
-    message_broadcast({'command':'update_status',"data":"in_round"});
+    message_broadcast({'command':'update_status',"data":"update_round","round":round_index});
+    status = "update_questions";
+    faded_answers = 0;
 }
 if (status == "before_start") {
-    score[0] = 0;
-    score[1] = 0;
-    message_broadcast({'command':'update_status',"data":"before_round","teams":["freshmen","sophomores"]});
-    status = "before_round";
+    message_broadcast({'command':'update_status',"data":"game_start"});
+    status = "update_round";
+}
+if (faded_answers == 4) {
+    status = "update_round";
 }
 document.querySelector("#status_text").innerHTML = "Current status: "+status;
 }
 
-function incorrect() {
-    message_broadcast({'command':'wrong'});
-    document.querySelector("#wrong").currentTime = 1.2;
+function wrong() {
+    message_broadcast({'command':'update_status','data':'incorrect_answer'});
+    document.querySelector("#wrong").currentTime = 0;
     document.querySelector("#wrong").play();
+    document.querySelector("#lockedin").pause();
 }
 
-function correct(id) {
-    message_broadcast({'command':'right','data':id});
+function correct() {
+    message_broadcast({'command':'update_status','data':'correct_answer'});
+    document.querySelector("#right").currentTime = 0;
     document.querySelector("#right").play();
-    score[id]++;
+    document.querySelector("#lockedin").pause();
 }
 
-function nextQuestion() {
-    question_index++;
-    document.querySelector("#question_text").innerHTML = "Current question index: "+question_index;
-    if (question_index > 8) {
-        document.querySelector("#question_text").style.color = "red";
-    } else {
-        document.querySelector("#question_text").style.color = "green";
-    }
-    message_broadcast({'command':'next_question',"data":question_index});
+function answer(index) {
+    message_broadcast({'command':'update_status','data':'select_answer','answer':index});
+    document.querySelector("#lockedin").currentTime = 0;
+    document.querySelector("#lockedin").play();
 }
 
 function message_broadcast(message)
