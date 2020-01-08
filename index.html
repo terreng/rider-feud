@@ -27,6 +27,10 @@ transform: translate(-50%,-50%) scale(1);
 }
 }
 
+#question {
+    animation: 1s fadeIn forwards;
+}
+
 .option {
     color: white;
     font-size: 45px;
@@ -157,7 +161,7 @@ Fourth choice
     ">
 </div>
 
-<div id="black" style="display:none;">
+<div id="black" style="display:block;">
 <div style="
     position: fixed;
     left: 0;
@@ -187,6 +191,8 @@ var questions = {
 }
 var onteam = 0;//0 = students, 1 = staff
 
+var gid = function(id) {return document.getElementById(id)};
+
 window.addEventListener("storage", message_receive);
 
 function message_receive(ev)
@@ -198,13 +204,19 @@ function message_receive(ev)
 
     if (message.command == 'update_status') {
     if (message.data == "game_start") {
-        gid("black").style.display = "block";
+        gid("option1").style.display = "none";
+        gid("option2").style.display = "none";
+        gid("option3").style.display = "none";
+        gid("option4").style.display = "none";
+        gid("question").style.display = "none";
+        gid("black").style.display = "none";
     }
     if (message.data == "update_round") {
 
         question_index = message.round;
         onteam = message.round % 2;
         gid("question_1").innerHTML = questions[question_index][0];
+        gid("question").style.display = "block";
         gid("option1").innerHTML = questions[question_index][1];
         gid("option2").innerHTML = questions[question_index][2];
         gid("option3").innerHTML = questions[question_index][3];
@@ -214,6 +226,18 @@ function message_receive(ev)
         gid("option3").style.display = "none";
         gid("option4").style.display = "none";
         faded_answer = 0;
+        gid("option1").classList.remove("selected");
+        gid("option2").classList.remove("selected");
+        gid("option3").classList.remove("selected");
+        gid("option4").classList.remove("selected");
+        gid("option1").classList.remove("correct");
+        gid("option2").classList.remove("correct");
+        gid("option3").classList.remove("correct");
+        gid("option4").classList.remove("correct");
+        gid("option1").classList.remove("incorrect");
+        gid("option2").classList.remove("incorrect");
+        gid("option3").classList.remove("incorrect");
+        gid("option4").classList.remove("incorrect");
 
     }
     if (message.data == "next_answer") {
@@ -222,22 +246,23 @@ function message_receive(ev)
     }
     if (message.data == "select_answer") {
 
+        console.log(message)
         selected_answer = message.answer;
-        gid("option"+selected_answer).classList.add("selected");
+        gid("option"+String(selected_answer+1)).classList.add("selected");
 
     }
     if (message.data == "correct_answer") {
 
         score[onteam]++;
         gid("score_"+onteam).src = score[onteam]+".png";
-        gid("option"+selected_answer).classList.remove("selected");
-        gid("option"+selected_answer).classList.add("correct");
+        gid("option"+String(selected_answer+1)).classList.remove("selected");
+        gid("option"+String(selected_answer+1)).classList.add("correct");
 
     }
     if (message.data == "incorrect_answer") {
 
-        gid("option"+selected_answer).classList.remove("selected");
-        gid("option"+selected_answer).classList.add("incorrect");
+        gid("option"+String(selected_answer+1)).classList.remove("selected");
+        gid("option"+String(selected_answer+1)).classList.add("incorrect");
 
     }
     }
