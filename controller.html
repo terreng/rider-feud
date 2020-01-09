@@ -84,14 +84,14 @@ function wrong() {
     message_broadcast({'command':'update_status','data':'incorrect_answer'});
     document.querySelector("#wrong").currentTime = 0;
     document.querySelector("#wrong").play();
-    document.querySelector("#lockedin").pause();
+    fadeOutPause(document.querySelector("#lockedin"));
 }
 
 function correct() {
     message_broadcast({'command':'update_status','data':'correct_answer'});
     document.querySelector("#right").currentTime = 0;
     document.querySelector("#right").play();
-    document.querySelector("#lockedin").pause();
+    fadeOutPause(document.querySelector("#lockedin"));
 }
 
 function answer(index) {
@@ -104,6 +104,22 @@ function message_broadcast(message)
 {
     localStorage.setItem('message',JSON.stringify(message));
     localStorage.removeItem('message');
+}
+
+function fadeOutPause(element) {
+
+element.volume = 1;
+var fadedown = setInterval(function() {
+    element.volume -= 0.1;
+    if (element.volume < 0.1) {
+        clearInterval(fadedown);
+        setTimeout(function() {
+            element.volume = 1;
+        },100);
+        element.pause();
+    }
+},100)
+
 }
 </script>
 </body>
