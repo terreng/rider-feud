@@ -65,10 +65,15 @@ transform: translate(-50%,-50%) scale(1);
     background: linear-gradient(0deg, #ff8400, #ffac00);
 }
 .correct {
-    background: linear-gradient(0deg, #00a205, #28e200);
+    background: linear-gradient(0deg, #04b109, #28e200);
 }
 .incorrect {
     background: linear-gradient(0deg, #bf0000, #ff2a2a);
+}
+.highlighted {
+    border-color: white;
+    transition: 0.4s border-color, 0.4s background;
+    background: linear-gradient(0deg, #3b80ff, #0245f7);
 }
 </style>
 </head>
@@ -238,6 +243,11 @@ function message_receive(ev)
         gid("option2").classList.remove("incorrect");
         gid("option3").classList.remove("incorrect");
         gid("option4").classList.remove("incorrect");
+        gid("option1").classList.remove("highlighted");
+        gid("option2").classList.remove("highlighted");
+        gid("option3").classList.remove("highlighted");
+        gid("option4").classList.remove("highlighted");
+        selected_answer = false;
 
     }
     if (message.data == "next_answer") {
@@ -260,10 +270,13 @@ function message_receive(ev)
 
     }
     if (message.data == "incorrect_answer") {
-
-        gid("option"+String(selected_answer+1)).classList.remove("selected");
-        gid("option"+String(selected_answer+1)).classList.add("incorrect");
-
+        if (selected_answer !== false) {
+            gid("option"+String(selected_answer+1)).classList.remove("selected");
+            gid("option"+String(selected_answer+1)).classList.add("incorrect");
+        }
+        setTimeout(function() {
+            gid("option"+String(questions[question_index][5])).classList.add("highlighted");
+        },1500);
     }
     }
 }

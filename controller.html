@@ -47,11 +47,21 @@ body {
 <audio id="lockedin">
     <source src="lockedin.mp3" type="audio/mp3">
   </audio>
+  <audio id="beforetimer">
+    <source src="beforetimer.wav" type="audio/wav">
+  </audio>
+  <audio id="countdown">
+    <source src="countdown.wav" type="audio/wav">
+  </audio>
 
 <video id="music" style="visibility: hidden;">
     <source src="music.mp4" type="video/mp4">
 </video>
 <script>
+document.querySelector("#right").volume = 0.6;
+document.querySelector("#wrong").volume = 0.6;
+
+
 var status = "before_start";
 var round_index = -1;
 var question_index = 0;
@@ -69,13 +79,21 @@ if (status == "update_round") {
     message_broadcast({'command':'update_status',"data":"update_round","round":round_index});
     status = "update_questions";
     faded_answers = 0;
+    fadeInStart(document.querySelector("#beforetimer"));
 }
 if (status == "before_start") {
     message_broadcast({'command':'update_status',"data":"game_start"});
     status = "update_round";
 }
-if (faded_answers == 4) {
+if (status == "start_timer") {
+    document.querySelector("#countdown").currentTime = 0;
+    document.querySelector("#countdown").play();
+    fadeOutPause(document.querySelector("#beforetimer"));
     status = "update_round";
+}
+if (faded_answers == 4) {
+    status = "start_timer";
+    faded_answers = 0;
 }
 document.querySelector("#status_text").innerHTML = "Current status: "+status;
 }
@@ -92,12 +110,28 @@ function correct() {
     document.querySelector("#right").currentTime = 0;
     document.querySelector("#right").play();
     fadeOutPause(document.querySelector("#lockedin"));
+
+document.querySelector("#right").volume = 1;
+var fadedown = setInterval(function() {
+if (document.querySelector("#right").currentTime > 6) {
+    document.querySelector("#right").volume -= 0.1;
+    if (document.querySelector("#right").volume < 0.1) {
+        clearInterval(fadedown);
+        setTimeout(function() {
+            document.querySelector("#right").volume = 1;
+        },100);
+        document.querySelector("#right").pause();
+    }
+}
+},100)
+
 }
 
 function answer(index) {
     message_broadcast({'command':'update_status','data':'select_answer','answer':index});
     document.querySelector("#lockedin").currentTime = 0;
     document.querySelector("#lockedin").play();
+    fadeOutPause(document.querySelector("#countdown"),true)
 }
 
 function message_broadcast(message)
@@ -106,11 +140,26 @@ function message_broadcast(message)
     localStorage.removeItem('message');
 }
 
-function fadeOutPause(element) {
+function fadeInStart(element) {
+
+element.currentTime = 0;
+element.volume = 0;
+element.play();
+var fadedown = setInterval(function() {
+    element.volume += 0.1;
+    if (element.volume > 0.9) {
+        clearInterval(fadedown);
+        element.volume = 1;
+    }
+},100)
+
+}
+
+function fadeOutPause(element,fast) {
 
 element.volume = 1;
 var fadedown = setInterval(function() {
-    element.volume -= 0.1;
+    element.volume -= (fast ? 0.25 : 0.1);
     if (element.volume < 0.1) {
         clearInterval(fadedown);
         setTimeout(function() {
