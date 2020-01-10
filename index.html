@@ -258,6 +258,10 @@ function message_receive(ev)
 
         console.log(message)
         selected_answer = message.answer;
+        gid("option1").classList.remove("selected");
+        gid("option2").classList.remove("selected");
+        gid("option3").classList.remove("selected");
+        gid("option4").classList.remove("selected");
         gid("option"+String(selected_answer+1)).classList.add("selected");
 
     }

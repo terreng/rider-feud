@@ -19,6 +19,10 @@ body {
     width: 150px;
     margin: 10px 0px;
 }
+.disabled {
+    pointer-events: none;
+    background: #888888;
+}
 .button:hover {
     opacity: 0.8;
 }
@@ -29,14 +33,14 @@ body {
 </head>
 <body>
 <div class="text" id="status_text">Current status: before_start</div>
-<div class="button" onclick="continueRound()">Continue</div>
+<div id="continue" class="button" onclick="continueRound()">Continue</div>
 <div class="text" id="question_text">Current question index: 0</div>
-<div class="button" onclick="correct()">Correct</div>
-<div class="button" onclick="wrong()">Wrong</div>
-<div class="button" onclick="answer(0)">A</div>
-<div class="button" onclick="answer(1)">B</div>
-<div class="button" onclick="answer(2)">C</div>
-<div class="button" onclick="answer(3)">D</div>
+<div id="correct" class="button disabled" onclick="correct()">Correct</div>
+<div id="wrongb"   class="button disabled" onclick="wrong()">Wrong</div>
+<div id="answer1" class="button disabled" onclick="answer(0)">A</div>
+<div id="answer2" class="button disabled" onclick="answer(1)">B</div>
+<div id="answer3" class="button disabled" onclick="answer(2)">C</div>
+<div id="answer4" class="button disabled" onclick="answer(3)">D</div>
 
 <audio id="wrong">
   <source src="wrong.mp3" type="audio/mp3">
@@ -90,6 +94,10 @@ if (status == "start_timer") {
     document.querySelector("#countdown").play();
     fadeOutPause(document.querySelector("#beforetimer"));
     status = "update_round";
+    gid("answer1").classList.remove("disabled")
+    gid("answer2").classList.remove("disabled")
+    gid("answer3").classList.remove("disabled")
+    gid("answer4").classList.remove("disabled")
 }
 if (faded_answers == 4) {
     status = "start_timer";
@@ -103,6 +111,13 @@ function wrong() {
     document.querySelector("#wrong").currentTime = 0;
     document.querySelector("#wrong").play();
     fadeOutPause(document.querySelector("#lockedin"));
+
+    gid("answer1").classList.add("disabled")
+    gid("answer2").classList.add("disabled")
+    gid("answer3").classList.add("disabled")
+    gid("answer4").classList.add("disabled")
+    gid("correct").classList.add("disabled")
+    gid("wrongb").classList.add("disabled")
 }
 
 function correct() {
@@ -125,6 +140,13 @@ if (document.querySelector("#right").currentTime > 6) {
 }
 },100)
 
+    gid("answer1").classList.add("disabled")
+    gid("answer2").classList.add("disabled")
+    gid("answer3").classList.add("disabled")
+    gid("answer4").classList.add("disabled")
+    gid("correct").classList.add("disabled")
+    gid("wrongb").classList.add("disabled")
+
 }
 
 function answer(index) {
@@ -132,6 +154,8 @@ function answer(index) {
     document.querySelector("#lockedin").currentTime = 0;
     document.querySelector("#lockedin").play();
     fadeOutPause(document.querySelector("#countdown"),true)
+    gid("correct").classList.remove("disabled")
+    gid("wrongb").classList.remove("disabled")
 }
 
 function message_broadcast(message)
