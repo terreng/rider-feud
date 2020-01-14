@@ -73,6 +73,9 @@ var faded_answers = 0;
 
 var gid = function(id) {return document.getElementById(id)};
 
+var timer_interval;
+var timer = 20;
+
 function continueRound() {
 if (status == "update_questions") {
     message_broadcast({'command':'update_status',"data":"next_answer"});
@@ -98,6 +101,16 @@ if (status == "start_timer") {
     gid("answer2").classList.remove("disabled")
     gid("answer3").classList.remove("disabled")
     gid("answer4").classList.remove("disabled")
+    timer = 20;
+    message_broadcast({'command':'update_status','data':'update_timer','time':20});
+    timer_interval = setInterval(function() {
+        timer -= 1;
+        message_broadcast({'command':'update_status','data':'update_timer','time':timer});
+        if (timer == 0) {
+            clearInterval(timer_interval);
+            gid("wrongb").classList.remove("disabled")
+        }
+    },1000);
 }
 if (faded_answers == 4) {
     status = "start_timer";
@@ -118,6 +131,9 @@ function wrong() {
     gid("answer4").classList.add("disabled")
     gid("correct").classList.add("disabled")
     gid("wrongb").classList.add("disabled")
+
+    clearInterval(timer_interval);
+    message_broadcast({'command':'update_status','data':'update_timer','time':-1});
 }
 
 function correct() {
@@ -156,6 +172,8 @@ function answer(index) {
     fadeOutPause(document.querySelector("#countdown"),true)
     gid("correct").classList.remove("disabled")
     gid("wrongb").classList.remove("disabled")
+    clearInterval(timer_interval);
+    message_broadcast({'command':'update_status','data':'update_timer','time':-1});
 }
 
 function message_broadcast(message)

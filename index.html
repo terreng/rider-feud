@@ -129,11 +129,12 @@ Fourth choice
     display: none;
 ">
 
-<img src="t10.png" style="
+<img id="timer" src="t10.png" style="
     height: 290px;
     position: absolute;
     top: 130px;
     right: 80px;
+    display: none;
 ">
 
 <div id="team_numbers">
@@ -215,6 +216,14 @@ function message_receive(ev)
     if (!message) return; // ignore empty msg or msg reset
 
     if (message.command == 'update_status') {
+    if (message.data == "update_timer") {
+    if (message.time == -1) {
+        gid("timer").style.display = "none";
+    } else {
+        gid("timer").style.display = "block";
+        gid("timer").src = "t"+(message.time == -0.5 ? "0b" : message.time)+".png"
+    }
+    }
     if (message.data == "game_start") {
         gid("option1").style.display = "none";
         gid("option2").style.display = "none";
