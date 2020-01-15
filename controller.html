@@ -101,6 +101,7 @@ if (status == "start_timer") {
     gid("answer2").classList.remove("disabled")
     gid("answer3").classList.remove("disabled")
     gid("answer4").classList.remove("disabled")
+    gid("continue").classList.add("disabled")
     timer = 20;
     message_broadcast({'command':'update_status','data':'update_timer','time':20});
     timer_interval = setInterval(function() {
@@ -131,6 +132,7 @@ function wrong() {
     gid("answer4").classList.add("disabled")
     gid("correct").classList.add("disabled")
     gid("wrongb").classList.add("disabled")
+    gid("continue").classList.remove("disabled")
 
     clearInterval(timer_interval);
     message_broadcast({'command':'update_status','data':'update_timer','time':-1});
@@ -141,6 +143,7 @@ function correct() {
     document.querySelector("#right").currentTime = 0;
     document.querySelector("#right").play();
     fadeOutPause(document.querySelector("#lockedin"));
+    gid("continue").classList.remove("disabled")
 
 document.querySelector("#right").volume = 1;
 var fadedown = setInterval(function() {

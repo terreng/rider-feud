@@ -34,7 +34,7 @@ transform: translate(-50%,-50%) scale(1);
 .option {
     color: white;
     font-size: 45px;
-    width: 23%;
+    width: calc(23% - 20px);
     left: 36.5%;
     transform: translateX(-50%);
     position: absolute;
@@ -49,9 +49,10 @@ transform: translate(-50%,-50%) scale(1);
     transition: 0.5s transform;
     transform-style: preserve-3d;
     border-radius: 100px;
-    text-align: center;
+    text-align: left;
     line-height: 70px;
-    animation: 1s fadeIn forwards;
+    animation: 0.5s fadeIn forwards;
+    padding-left: 40px;
 }
 @keyframes fadeIn {
 0% {
@@ -238,10 +239,10 @@ function message_receive(ev)
         onteam = message.round % 2;
         gid("question_1").innerHTML = questions[question_index][0];
         gid("question").style.display = "block";
-        gid("option1").innerHTML = questions[question_index][1];
-        gid("option2").innerHTML = questions[question_index][2];
-        gid("option3").innerHTML = questions[question_index][3];
-        gid("option4").innerHTML = questions[question_index][4];
+        gid("option1").innerHTML = "A. "+questions[question_index][1];
+        gid("option2").innerHTML = "B. "+questions[question_index][2];
+        gid("option3").innerHTML = "C. "+questions[question_index][3];
+        gid("option4").innerHTML = "D. "+questions[question_index][4];
         gid("option1").style.display = "none";
         gid("option2").style.display = "none";
         gid("option3").style.display = "none";
