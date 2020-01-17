@@ -21,7 +21,7 @@ body {
 }
 .disabled {
     pointer-events: none;
-    background: #888888;
+    background: #888888 !important;
 }
 .button:hover {
     opacity: 0.8;
@@ -34,7 +34,7 @@ body {
 <body>
 <div class="text" id="status_text">Current status: before_start</div>
 <div id="continue" class="button" onclick="continueRound()">Continue</div>
-<div class="text" id="question_text">Current question index: 0</div>
+<div class="text" id="question_text"></div>
 <div id="correct" class="button disabled" onclick="correct()">Correct</div>
 <div id="wrongb"   class="button disabled" onclick="wrong()">Wrong</div>
 <div id="answer1" class="button disabled" onclick="answer(0)">A</div>
@@ -62,6 +62,22 @@ body {
     <source src="music.mp4" type="video/mp4">
 </video>
 <script>
+var questions = {
+    0: ["What was the name of the snowman in Frozen?","Sven","Marshmallow","Olaf","Oaken",3],
+    1: ["Who sang the song \"Toxic\"?","Lady Gaga","Britney Spears","Christina Aguilera","Taylor Swift",2],
+    2: ["What was the name of the baby woolly mammoth in Ice Age?","Manfred","Peaches","Sid","Ellie",2],
+    3: ["Who was the villain in Ice Age 3?","Captain Hook","Captain Gutt","Scar","Cruella De Vil",2],
+    4: ["What part of the atom has no electrical charge?","Neutron","Proton","Electron","Nucleus",1],
+    5: ["Which country produces the most coffee?","Brazil","Ethiopia","United States","Thailand",1],
+    6: ["What is the largest internal organ in the human body?","Heart","Lungs","Bladder","Liver",4],
+    7: ["What is the longest river in the world?","Amazon River","Congo River","Nile River","Yangtze River",3],
+    8: ["About how many students are currently enrolled at Roosevelt?","","","","",0],
+    9: ["What city is the Empire State Building located in?","Chicago","New York","Boston","Philadelphia",2],
+    10: ["Which of the following is a prime number?","0","9","22","31",4],
+    11: ["Where was the The Fresh Prince of Bel-Air born and raised?","South Philadelphia","East Compton","West Philadelphia","North Atlanta",3],
+    12: ["What is the longest river in the world?","Amazon River","Congo River","Nile River","Yangtze River",3],
+}
+
 document.querySelector("#right").volume = 0.6;
 document.querySelector("#wrong").volume = 0.6;
 
@@ -87,6 +103,7 @@ if (status == "update_round") {
     status = "update_questions";
     faded_answers = 0;
     fadeInStart(document.querySelector("#beforetimer"));
+    gid("question_text").innerHTML = questions[round_index][0]+"<br>Correct answer: "+(["A. ","B. ","C. ","D. "][questions[round_index][5]-1])+questions[round_index][questions[round_index][5]];
 }
 if (status == "before_start") {
     message_broadcast({'command':'update_status',"data":"game_start"});
@@ -143,7 +160,7 @@ function correct() {
     document.querySelector("#right").currentTime = 0;
     document.querySelector("#right").play();
     fadeOutPause(document.querySelector("#lockedin"));
-    gid("continue").classList.remove("disabled")
+    gid("continue").classList.remove("disabled");
 
 document.querySelector("#right").volume = 1;
 var fadedown = setInterval(function() {
@@ -177,6 +194,18 @@ function answer(index) {
     gid("wrongb").classList.remove("disabled")
     clearInterval(timer_interval);
     message_broadcast({'command':'update_status','data':'update_timer','time':-1});
+    gid("answer1").style.background = "";
+    gid("answer2").style.background = "";
+    gid("answer3").style.background = "";
+    gid("answer4").style.background = "";
+    gid("answer"+(index+1)).style.background = "orange";
+    if (questions[round_index][5]-1 == index) {
+        gid("correct").style.background = "green";
+        gid("wrongb").style.background = "";
+    } else {
+        gid("correct").style.background = "";
+        gid("wrongb").style.background = "red";
+    }
 }
 
 function message_broadcast(message)
