@@ -103,7 +103,7 @@ if (status == "update_round") {
     status = "update_questions";
     faded_answers = 0;
     fadeInStart(document.querySelector("#beforetimer"));
-    gid("question_text").innerHTML = questions[round_index][0]+"<br>Correct answer: "+(["A. ","B. ","C. ","D. "][questions[round_index][5]-1])+questions[round_index][questions[round_index][5]];
+    gid("question_text").innerHTML = (round_index % 2 == 0 ? "Students" : "Staff")+"<br>"+questions[round_index][0]+"<br>Correct answer: "+(["A. ","B. ","C. ","D. "][questions[round_index][5]-1])+questions[round_index][questions[round_index][5]];
 }
 if (status == "before_start") {
     message_broadcast({'command':'update_status',"data":"game_start"});
@@ -118,6 +118,12 @@ if (status == "start_timer") {
     gid("answer2").classList.remove("disabled")
     gid("answer3").classList.remove("disabled")
     gid("answer4").classList.remove("disabled")
+    gid("answer1").style.background = "";
+    gid("answer2").style.background = "";
+    gid("answer3").style.background = "";
+    gid("answer4").style.background = "";
+    gid("wrongb").style.background = "";
+    gid("correct").style.background = "";
     gid("continue").classList.add("disabled")
     timer = 20;
     message_broadcast({'command':'update_status','data':'update_timer','time':20});
@@ -220,7 +226,11 @@ element.currentTime = 0;
 element.volume = 0;
 element.play();
 var fadedown = setInterval(function() {
+    try {
     element.volume += 0.1;
+    } catch {
+        element.volume = 1;
+    }
     if (element.volume > 0.9) {
         clearInterval(fadedown);
         element.volume = 1;
@@ -233,7 +243,11 @@ function fadeOutPause(element,fast) {
 
 element.volume = 1;
 var fadedown = setInterval(function() {
+    try {
     element.volume -= (fast ? 0.25 : 0.1);
+    } catch {
+        element.volume = 0;
+    }
     if (element.volume < 0.1) {
         clearInterval(fadedown);
         setTimeout(function() {
