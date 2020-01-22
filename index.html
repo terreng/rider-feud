@@ -99,7 +99,7 @@ transform: translate(-50%,-50%) scale(1);
     transition: 0.5s transform;
     transform-style: preserve-3d;
     border-radius: 100px;
-    padding: 0px 10px;
+   
     ">
 <div id="question_1" style="
     backface-visibility: hidden;
@@ -107,6 +107,7 @@ transform: translate(-50%,-50%) scale(1);
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    padding: 0px 10px;
 ">What is your body's largest organ?</div>
 </div>
 <div id="option1" class="option">
@@ -167,13 +168,13 @@ Fourth choice
     position: absolute;
     left: 50%;
     transform: translateX(-50%) scale(1.2);
-    top: 479px;
+    top: 300px;
     ">
-<img id="winner_team" src="seniors.png" style="
+<img id="winner_team" src="" style="
     position: absolute;
     left: 50%;
     transform: translateX(-50%) scale(2);
-    top: 700px;
+    top: 550px;
     ">
 </div>
 
@@ -221,7 +222,7 @@ var questions = {
     0: ["What was the name of the snowman in Frozen?","Sven","Marshmallow","Olaf","Oaken",3],
     1: ["Who sang the song \"Toxic\"?","Lady Gaga","Britney Spears","Christina Aguilera","Taylor Swift",2],
     2: ["What was the name of the baby woolly mammoth in Ice Age?","Manfred","Peaches","Sid","Ellie",2],
-    3: ["Who was the villain in Ice Age 3?","Captain Hook","Captain Gutt","Scar","Cruella De Vil",2],
+    3: ["Which of the following is NOT a real Crayola Crayon color?","Red Dirt","Cornflower","Unmellow Yellow","Robin Egg Blue",1],
     4: ["What part of the atom has no electrical charge?","Neutron","Proton","Electron","Nucleus",1],
     5: ["Which country produces the most coffee?","Brazil","Ethiopia","United States","Thailand",1],
     6: ["What is the largest internal organ in the human body?","Heart","Lungs","Bladder","Liver",4],
@@ -327,6 +328,21 @@ function message_receive(ev)
         setTimeout(function() {
             gid("option"+String(questions[question_index][5])).classList.add("highlighted");
         },1500);
+    }
+    if (message.data == "end_game") {
+        gid("winner").style.display = "block";
+        gid("team_names").style.display = "none";
+        gid("team_numbers").style.display = "none";
+        gid("question").style.display = "none";
+        gid("option1").style.display = "none";
+        gid("option2").style.display = "none";
+        gid("option3").style.display = "none";
+        gid("option4").style.display = "none";
+        if (score[1] > score[0]) {
+            gid("winner_team").src = "staff.png"
+        } else {
+            gid("winner_team").src = "students.png"
+        }
     }
     }
 }

@@ -42,6 +42,8 @@ body {
 <div id="answer3" class="button disabled" onclick="answer(2)">C</div>
 <div id="answer4" class="button disabled" onclick="answer(3)">D</div>
 
+<div id="end_game" style="margin-top: 50px;" class="button" onclick="endGame()">END GAME</div>
+
 <audio id="wrong">
   <source src="wrong.mp3" type="audio/mp3">
 </audio>
@@ -66,7 +68,7 @@ var questions = {
     0: ["What was the name of the snowman in Frozen?","Sven","Marshmallow","Olaf","Oaken",3],
     1: ["Who sang the song \"Toxic\"?","Lady Gaga","Britney Spears","Christina Aguilera","Taylor Swift",2],
     2: ["What was the name of the baby woolly mammoth in Ice Age?","Manfred","Peaches","Sid","Ellie",2],
-    3: ["Who was the villain in Ice Age 3?","Captain Hook","Captain Gutt","Scar","Cruella De Vil",2],
+    3: ["Which of the following is NOT a real Crayola Crayon color?","Red Dirt","Cornflower","Unmellow Yellow","Robin Egg Blue",1],
     4: ["What part of the atom has no electrical charge?","Neutron","Proton","Electron","Nucleus",1],
     5: ["Which country produces the most coffee?","Brazil","Ethiopia","United States","Thailand",1],
     6: ["What is the largest internal organ in the human body?","Heart","Lungs","Bladder","Liver",4],
@@ -212,6 +214,10 @@ function answer(index) {
         gid("correct").style.background = "";
         gid("wrongb").style.background = "red";
     }
+}
+
+function endGame() {
+    message_broadcast({'command':'update_status','data':'end_game'});
 }
 
 function message_broadcast(message)
